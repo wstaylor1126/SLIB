@@ -27,7 +27,7 @@ void* SignatureScan(char* signature, unsigned int size)
 					break;
 				}
 				int totalMatched = 0;
-				for (int j = 0; j < sizeof(signature); j++)
+				for (int j = 0; j < size; j++)
 				{
 					if (store[j] == signature[j])
 					{

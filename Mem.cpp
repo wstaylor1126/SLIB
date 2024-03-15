@@ -1,8 +1,25 @@
 #include "Mem.h"
 
+//--Throwaway funcs
+int ByteArrCmp_Mask(const char* cmp1, const char* cmp2, unsigned int size, const char* mask)
+{
+	for (int i = 0; i < size; i++)
+	{
+		if (mask[i] == '%')
+		{
+			continue;
+		}
+		if (cmp1[i] != cmp2[i])
+		{
+			return 0;
+		}
+	}
+	return 1;
+};
+
 //--TODO: Needs to return a vector of all found values instead of 1 return.
 #if defined(_WIN32)
-void* SignatureScan(char* signature, unsigned int size)
+void* SignatureScan(const char* signature, unsigned int size, const char* mask)
 {
 	MEMORY_BASIC_INFORMATION pageInfo;
 	void* pageBeginPtr = nullptr;
@@ -26,15 +43,7 @@ void* SignatureScan(char* signature, unsigned int size)
 				{
 					break;
 				}
-				int totalMatched = 0;
-				for (int j = 0; j < size; j++)
-				{
-					if (store[j] == signature[j])
-					{
-						totalMatched++;
-					}
-				}
-				if (totalMatched == size)
+				if (ByteArrCmp_Mask(signature, store, size, mask))
 				{
 					return store;
 				}
